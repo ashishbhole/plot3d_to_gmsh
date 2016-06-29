@@ -6,7 +6,7 @@
       integer, dimension(:,:), allocatable :: ind
       integer, dimension(:), allocatable :: tag
 
-      nnodes = imax*jmax - (wst-1)
+      nnodes = imax*jmax - wst   !(wst-1)
       nelems = (imax-1)*(jmax-1) + (wen-wst) + (imax-1)   +  2*(jmax-1)
       !-------quadrangles(1)-------wall(2)----farfield(3)----farfield(4)-----
 
@@ -29,14 +29,14 @@
       write(8,'(I6)') nnodes
       k = 1
       j = 1
-       do i = 1,wen
-          write(8,'(I6,X,E22.16,2X,E22.16,3X,F3.1)') k,xg(i,j),yg(i,j),z
+       do i = 1, wen-1   !wen
+          write(8,'(I6,X,E20.14,2X,E20.14,3X,F3.1)') k,xg(i,j),yg(i,j),z
           ind(i,j) = k
           k = k+1
        enddo
        do j = 2,jmax
        do i = 1,imax
-          write(8,'(I6,X,E22.16,2X,E22.16,3X,F3.1)') k,xg(i,j),yg(i,j),z
+          write(8,'(I6,X,E20.14,2X,E20.14,3X,F3.1)') k,xg(i,j),yg(i,j),z
           ind(i,j) = k
           k = k+1
        enddo
@@ -50,8 +50,11 @@
       k = 1
       j = 1    
       do i = 1,imax-1   
-         if(i .lt. wen) then
+         if(i .lt. (wen-1)) then
            write(8,'(9(I6,X))') k,eltype,ntags,tag(1),tag(2),ind(i,j),ind(i+1,j),ind(i+1,j+1),ind(i,j+1)
+           k = k+1
+         else if(i .eq. (wen-1))then
+           write(8,'(9(I6,X))') k,eltype,ntags,tag(1),tag(2),ind(i,j),ind(wst,j),ind(i+1,j+1),ind(i,j+1)
            k = k+1
          else
            write(8,'(9(I6,X))') k,eltype,ntags,tag(1),tag(2),ind(wen-i+wst,j),ind(wen-i+wst-1,j),ind(i+1,j+1),ind(i,j+1)
@@ -67,10 +70,13 @@
 
       eltype = 1 ; tag(1) = 2 ; tag(2) = 2  ! for airfoil wall
       j = 1
-      do i = wst, wen-1
+      do i = wst, wen-2
        write(8,'(7(I6,X))') k,eltype,ntags,tag(1),tag(2),ind(i,j),ind(i+1,j)
        k = k+1
       enddo
+      i = wen-1
+       write(8,'(7(I6,X))') k,eltype,ntags,tag(1),tag(2),ind(i,j),ind(wst,j)
+       k = k+1
 
       eltype = 1 ; tag(1) = 3 ; tag(2) = 3  ! for farfield_1 (curved)
       j = jmax
