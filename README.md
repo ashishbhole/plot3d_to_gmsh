@@ -4,3 +4,4 @@ Fortran program that converts plot3d file format for 2D grids (.p2dfmt) in gmsh 
 How to run:
 1) type make in command line. It creates executable called conv.
 2) then type ./conv
+3) don't forget to read input.dat
