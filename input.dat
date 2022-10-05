@@ -1,5 +1,5 @@
 # Name of input file
-n0012_897-257.p2dfmt
+test/n0012_897-257.p2dfmt
 # Name of output file
 n0012_897-257.msh
 # Gmsh Version, File_type (0 for ASCII), Data_type (8 for double)
